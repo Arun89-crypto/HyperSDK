@@ -62,8 +62,8 @@ Endpoint : 0x6aB5Ae6822647046626e83ee6dB8187151E1d5ab
 - Optimism (Göerli)
 
 ```sh
-V3 Factory : 0x1F98431c8aD98523631AE4a59f267346ea31F984 // TO_VERIFY
-V3 Swap Router : 0xE592427A0AEce92De3Edee1F18E0157C05861564 // TO_VERIFY
+V3 Factory : 0xB656dA17129e7EB733A557f4EBc57B76CFbB5d10 // VERIFIED
+V3 Swap Router : 0xE592427A0AEce92De3Edee1F18E0157C05861564 // VERIFIED
 ```
 
 - Base (Göerli)
@@ -77,5 +77,5 @@ V3 Swap Router : 0xE592427A0AEce92De3Edee1F18E0157C05861564 // TO_VERIFY
 
 | Network           | Pool Name     | Pool Link                                                                  |                                   Pool NFT                                    | Pool Address                                 |
 | :---------------- | :------------ | :------------------------------------------------------------------------- | :---------------------------------------------------------------------------: | -------------------------------------------- |
-| Optimism (Göerli) | `tWETH-tUSDC` | [https://app.uniswap.org/#/pools/106](https://app.uniswap.org/#/pools/106) | ![tWETH-tUSDC-OPTIMISM-GOERLI](./assets/tWETH_tUSDC_pool_optimism_goerli.svg) | `0x46769a055f5E2342Cef15DA5F132A2a549D3EbfB` |
-| Base (Göerli)     | `tWETH-tUSDC` | [https://app.uniswap.org/#/pools/2](https://app.uniswap.org/#/pools/2)     |     ![tWETH-tUSDC-BASE-GOERLI](./assets/tWETH_tUSDC_pool_base_goerli.svg)     | `TO_VERIFY`                                  |
+| Optimism (Göerli) | `tWETH-tUSDC` | [https://app.uniswap.org/#/pools/106](https://app.uniswap.org/#/pools/106) | ![tWETH-tUSDC-OPTIMISM-GOERLI](./assets/tWETH_tUSDC_pool_optimism_goerli.svg) | `0x8A82c434F2701A44258173287aa0497856735386` |
+| Base (Göerli)     | `tWETH-tUSDC` | [https://app.uniswap.org/#/pools/2](https://app.uniswap.org/#/pools/2)     |     ![tWETH-tUSDC-BASE-GOERLI](./assets/tWETH_tUSDC_pool_base_goerli.svg)     | `0x46769a055f5E2342Cef15DA5F132A2a549D3EbfB` |

@@ -9,6 +9,8 @@ pragma abicoder v2;
 
 // IMPORTS
 // import "./NonblockingLzApp.sol";
+
+// LayerZero Imports
 import "@layerzerolabs/solidity-examples/contracts/lzApp/NonblockingLzApp.sol";
 import "@layerzerolabs/solidity-examples/contracts/lzApp/LzApp.sol";
 import "@layerzerolabs/solidity-examples/contracts/interfaces/ILayerZeroReceiver.sol";
@@ -17,6 +19,7 @@ import "@layerzerolabs/solidity-examples/contracts/interfaces/ILayerZeroEndpoint
 import "@layerzerolabs/solidity-examples/contracts/util/BytesLib.sol";
 import "@layerzerolabs/solidity-examples/contracts/util/ExcessivelySafeCall.sol";
 
+// Uniswap V3 Imports
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 import "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
@@ -31,6 +34,10 @@ import "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolOwnerActions.so
 import "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolEvents.sol";
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
 
+// Uniswap V2 Imports
+import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router01.sol";
+
+// Open Zeppelin Imports
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -39,11 +46,12 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 contract TokenBridgeHyper is Ownable, NonblockingLzApp {
     ISwapRouter public immutable swapRouter;
+    IUniswapV2Router01 public immutable swapRouter2;
     IUniswapV3Factory public immutable uniswapV3Factory;
     address public priceFeedAddress;
     address public stableAssetAddressUSDC;
     address public wrappedAssetAddressNative;
-    uint24 public constant POOL_FEE = 3000;
+    uint24 public constant POOL_FEE = 500;
 
     /**
      * @notice Getting the native balance of the contract
@@ -53,11 +61,13 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
     constructor(
         address _endpoint,
         ISwapRouter _swapRouter,
+        IUniswapV2Router01 _swapRouter2,
         address _stableAssetAddressUSDC,
         address _wrappedAssetAddressNative,
         IUniswapV3Factory _uniswapV3Factory
     ) NonblockingLzApp(_endpoint) {
         swapRouter = _swapRouter;
+        swapRouter2 = _swapRouter2;
         stableAssetAddressUSDC = _stableAssetAddressUSDC;
         wrappedAssetAddressNative = _wrappedAssetAddressNative;
         uniswapV3Factory = _uniswapV3Factory;
@@ -119,7 +129,19 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
             (uint256, address)
         );
 
-        _performAssetSwapOnReceiving(_amountOfTokenSwapUSD, _recieverAddress);
+        if (srcChainId == 0) {
+            // In case of Base -> Optimism
+            _performAssetSwapOnReceivingV3(
+                _amountOfTokenSwapUSD,
+                _recieverAddress
+            );
+        } else {
+            // In case of Optimism -> Base
+            _performAssetSwapOnReceivingV2(
+                _amountOfTokenSwapUSD,
+                _recieverAddress
+            );
+        }
     }
 
     /**
@@ -127,7 +149,7 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
      * @param _amountIn - the sent amount
      * @param _recipient - address of the receiver of the assets
      */
-    function _performAssetSwapOnReceiving(
+    function _performAssetSwapOnReceivingV3(
         uint256 _amountIn,
         address _recipient
     ) private returns (uint256 _amountOut) {
@@ -145,6 +167,29 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
 
         _amountOut = swapRouter.exactInputSingle(params);
         return _amountOut;
+    }
+
+    /**
+     * @notice To execute the swaps on the behalf of the contract
+     * @param _amountIn - the sent amount
+     * @param _recipient - address of the receiver of the assets
+     */
+    function _performAssetSwapOnReceivingV2(
+        uint256 _amountIn,
+        address _recipient
+    ) private returns (uint256[] memory _amountOut) {
+        uint deadline = block.timestamp + 100000;
+        address[] memory path = new address[](2);
+        path[0] = address(stableAssetAddressUSDC);
+        path[1] = address(wrappedAssetAddressNative);
+
+        _amountOut = swapRouter2.swapExactTokensForTokens(
+            0,
+            _amountIn,
+            path,
+            _recipient,
+            deadline
+        );
     }
 
     /**
