@@ -222,4 +222,4 @@ class HyperSwapper {
   // ==========================================================
 }
 
-module.exports = HyperSwapper;
+export default HyperSwapper;
