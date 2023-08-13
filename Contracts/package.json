@@ -4,12 +4,13 @@
     "main": "index.js",
     "license": "MIT",
     "dependencies": {
-        "hardhat": "^2.17.1",
         "@layerzerolabs/solidity-examples": "^0.0.13",
         "@openzeppelin/contracts": "^4.9.3",
         "@uniswap/v3-core": "^1.0.1",
         "@uniswap/v3-periphery": "^1.4.3",
-        "dotenv": "^16.0.3"
+        "bignumber.js": "^9.1.1",
+        "dotenv": "^16.0.3",
+        "hardhat": "^2.17.1"
     },
     "devDependencies": {
         "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",

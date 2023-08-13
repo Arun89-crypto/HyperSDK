@@ -23,7 +23,7 @@ import "@layerzerolabs/solidity-examples/contracts/util/ExcessivelySafeCall.sol"
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 import "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
-import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
+import "./FullMath.sol";
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "@uniswap/v3-core/contracts/interfaces/callback/IUniswapV3SwapCallback.sol";
 import "@uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolImmutables.sol";
@@ -84,7 +84,8 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
             "You need to send the exact amount of tokens !!"
         );
 
-        uint256 amountToSwap = _getAssetPrice(_amount);
+        // gives 1 eth price
+        uint256 amountToSwap = _amount;
         bytes memory payload = abi.encodePacked(amountToSwap, msg.sender);
 
         uint16 version = 1;
@@ -124,24 +125,31 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
 
         uint16 srcChainId = _srcChainId;
 
-        (uint256 _amountOfTokenSwapUSD, address _recieverAddress) = abi.decode(
+        (uint256 _amountOfTokenSwapETH, address _recieverAddress) = abi.decode(
             _payload,
             (uint256, address)
         );
 
-        if (srcChainId == 0) {
-            // In case of Base -> Optimism
-            _performAssetSwapOnReceivingV3(
-                _amountOfTokenSwapUSD,
-                _recieverAddress
-            );
-        } else {
-            // In case of Optimism -> Base
-            _performAssetSwapOnReceivingV2(
-                _amountOfTokenSwapUSD,
-                _recieverAddress
-            );
-        }
+        // ! [UNISWAP ERROR] : Quotes not available for custom token pair yet.
+        // if (srcChainId == 0) {
+        //     // In case of Base -> Optimism
+        //     _performAssetSwapOnReceivingV3(
+        //         _amountOfTokenSwapUSD,
+        //         _recieverAddress
+        //     );
+        // } else {
+        //     // In case of Optimism -> Base
+        //     _performAssetSwapOnReceivingV2(
+        //         _amountOfTokenSwapUSD,
+        //         _recieverAddress
+        //     );
+        // }
+
+        _performSwap(_amountOfTokenSwapETH, _recieverAddress);
+    }
+
+    function _performSwap(uint256 _amount, address _reciever) private {
+        IERC20(wrappedAssetAddressNative).transfer(_reciever, _amount);
     }
 
     /**
