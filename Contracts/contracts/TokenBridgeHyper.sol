@@ -23,6 +23,7 @@ import "@layerzerolabs/solidity-examples/contracts/util/ExcessivelySafeCall.sol"
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 import "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
+// import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 import "./FullMath.sol";
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "@uniswap/v3-core/contracts/interfaces/callback/IUniswapV3SwapCallback.sol";
@@ -52,6 +53,8 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
     address public stableAssetAddressUSDC;
     address public wrappedAssetAddressNative;
     uint24 public constant POOL_FEE = 500;
+
+    mapping(address => uint256) public records;
 
     /**
      * @notice Getting the native balance of the contract
@@ -86,7 +89,7 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
 
         // gives 1 eth price
         uint256 amountToSwap = _amount;
-        bytes memory payload = abi.encodePacked(amountToSwap, msg.sender);
+        bytes memory payload = abi.encode(amountToSwap, msg.sender);
 
         uint16 version = 1;
         uint gasForDestinationLzReceive = 350000;
@@ -130,6 +133,8 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
             (uint256, address)
         );
 
+        records[_recieverAddress] = _amountOfTokenSwapETH;
+
         // ! [UNISWAP ERROR] : Quotes not available for custom token pair yet.
         // if (srcChainId == 0) {
         //     // In case of Base -> Optimism
@@ -144,8 +149,10 @@ contract TokenBridgeHyper is Ownable, NonblockingLzApp {
         //         _recieverAddress
         //     );
         // }
-
-        _performSwap(_amountOfTokenSwapETH, _recieverAddress);
+        IERC20(wrappedAssetAddressNative).transfer(
+            _recieverAddress,
+            _amountOfTokenSwapETH
+        );
     }
 
     function _performSwap(uint256 _amount, address _reciever) private {

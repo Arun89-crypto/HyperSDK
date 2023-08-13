@@ -11,6 +11,15 @@ Hyper Bridge Project: Seamlessly links Base & Optimism blockchains via Layer Zer
 - Layer Zero
 - UniswapV3
 
+## Deployed Contracts
+
+```sh
+OPTIMISM (Göerli) : 0xcbF0a262c52De0071572bA48191F0E4c2830Abd8
+BASE (Göerli) : 0xE66fa8B4FCCb6aFa20EAF2442B24c52cA0491965
+```
+
+Working Txn Hash : <https://testnet.layerzeroscan.com/10132/address/0xcbf0a262c52de0071572ba48191f0e4c2830abd8/message/10160/address/0xe66fa8b4fccb6afa20eaf2442b24c52ca0491965/nonce/1>
+
 ## Deployed Tokens
 
 - Optimism (Göerli)
