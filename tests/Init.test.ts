@@ -1,8 +1,9 @@
 import { Provider, Signer, ethers } from "ethers";
-import HyperSwapper from "../index";
+import HyperSwapper from "../src/index";
 import { expect } from "chai";
 import dotenv from "dotenv";
 dotenv.config();
+jest.setTimeout(100000);
 
 describe("Initiation Tests", () => {
   let swapper: HyperSwapper;

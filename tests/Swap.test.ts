@@ -1,8 +1,8 @@
 import { Provider, Signer, ethers } from "ethers";
-import HyperSwapper from "../index";
+import HyperSwapper from "../src/index";
 import { expect } from "chai";
 import dotenv from "dotenv";
-import { TransactionResult } from "../enum/TransactionResult";
+import { TransactionResult } from "../src/enum/TransactionResult";
 dotenv.config();
 jest.setTimeout(100000);
 
