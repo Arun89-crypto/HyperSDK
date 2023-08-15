@@ -3,11 +3,13 @@ import { MainConfig } from "./Interface/MainConfig";
 import HyperTokenBridgeABI from "./contract_artifacts/contracts/TokenBridgeHyper.sol/TokenBridgeHyper.json";
 import ERC20ABI from "./contract_artifacts/contracts/tWETH.sol/TestWETH.json";
 import ENDPOINTABI from "./contract_artifacts/@layerzerolabs/solidity-examples/contracts/interfaces/ILayerZeroEndpoint.sol/ILayerZeroEndpoint.json";
-
 import { TESTNET_CONFIG } from "./config";
 import BigNumber from "bignumber.js";
 import { SwapResult } from "./Interface/SwapResult";
 import { TransactionResult } from "./enum/TransactionResult";
+import { getMessagesBySrcTxHash } from "@layerzerolabs/scan-client";
+import { Message } from "./Types/LayerZeroMessage";
+import { MessageStatus } from "./enum/MessageStatus";
 
 const _TEST_PAYLOAD =
   "0x00000000000000000000000000000000000000000000000000038d7ea4c68000000000000000000000000000858a9477f74baa24a7f062b74a7f2d064443df2e";
@@ -92,7 +94,7 @@ class HyperSwapper {
 
       return {
         result: TransactionResult.ACCEPTED,
-        TransactionHash: call.transaction_hash,
+        TransactionHash: call.hash,
         TransactionData: call,
       };
     } catch (error) {
@@ -125,7 +127,7 @@ class HyperSwapper {
 
       return {
         result: TransactionResult.ACCEPTED,
-        TransactionHash: call.transaction_hash,
+        TransactionHash: call.hash,
         TransactionData: call,
       };
     } catch (error) {
@@ -194,6 +196,45 @@ class HyperSwapper {
 
     return fee[0].toString();
   };
+
+  // ==========================================================
+  // Functions to get the transaction status from layerzero
+  // ==========================================================
+  _getTransactionStatusLZ_1 = async (
+    txn_hash: string
+  ): Promise<MessageStatus> => {
+    const chainId_source = TESTNET_CONFIG[this.config.name_1].CHAIN_ID;
+    // wait for message to relay in layerzero
+    // --------------------------------------
+    setTimeout(() => {}, 5000);
+    const call = await getMessagesBySrcTxHash(Number(chainId_source), txn_hash);
+    console.log(call);
+    return call.messages[0].status;
+  };
+  _getFullTransactionStatusLZ_1 = async (
+    txn_hash: string
+  ): Promise<Message> => {
+    const chainId_source = TESTNET_CONFIG[this.config.name_1].CHAIN_ID;
+    const call = await getMessagesBySrcTxHash(Number(chainId_source), txn_hash);
+    //@ts-ignore
+    return call.messages[0];
+  };
+  _getTransactionStatusLZ_2 = async (
+    txn_hash: string
+  ): Promise<MessageStatus> => {
+    const chainId_source = TESTNET_CONFIG[this.config.name_2].CHAIN_ID;
+    const call = await getMessagesBySrcTxHash(Number(chainId_source), txn_hash);
+    return call.messages[0].status;
+  };
+  _getFullTransactionStatusLZ_2 = async (
+    txn_hash: string
+  ): Promise<Message> => {
+    const chainId_source = TESTNET_CONFIG[this.config.name_2].CHAIN_ID;
+    const call = await getMessagesBySrcTxHash(Number(chainId_source), txn_hash);
+    //@ts-ignore
+    return call.messages[0];
+  };
+  // ==========================================================
 
   // ==========================================================
   // Functions to get tWETH address according to chain
