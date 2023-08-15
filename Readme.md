@@ -18,3 +18,5 @@ Hyper Bridge Project: Seamlessly links Base & Optimism blockchains via Layer Zer
 - EthersJS
 - Layer Zero
 - UniswapV3
+
+Coming soon ..... (npm and yarn package)

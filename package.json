@@ -1,6 +1,6 @@
 {
     "name": "@arun89-crypto/hypersdk",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "main": "index.js",
     "repository": "https://github.com/Arun89-crypto/HyperSDK",
     "author": "Arun89-crypto <arunjngra89@gmail.com>",
@@ -11,6 +11,12 @@
         "test:init": "yarn jest tests/Init.test.ts",
         "test:swap": "yarn jest tests/Swap.test.ts"
     },
+    "keywords": [
+        "blockchain",
+        "swap",
+        "defi",
+        "ethers"
+    ],
     "dependencies": {
         "@layerzerolabs/scan-client": "^0.0.6",
         "axios": "^1.4.0",
