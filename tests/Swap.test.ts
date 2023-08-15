@@ -31,25 +31,26 @@ describe("Initiation Tests", () => {
       signer2: signer2,
     });
   });
-  it("Should init all the providers succesfully", async () => {
-    const p1 = swapper.provider1;
-    const p2 = swapper.provider2;
 
-    const call1 = await p1.getBlock("latest");
-    const call2 = await p2.getBlock("latest");
-
-    expect(call1?.number).greaterThan(0);
-    expect(call2?.number).greaterThan(0);
+  it("Should get the fee estimate for chain 1 to chain 2", async () => {
+    const fee_estimate = await swapper._estimateFeeFrom1to2();
+    console.log("Fee Estimate 1 -> 2 :", fee_estimate);
+    expect(fee_estimate.length).to.greaterThan(10);
   });
 
-  it("Should init all the contracts succesfully", async () => {
-    const c1 = swapper.contract1;
-    const c2 = swapper.contract2;
+  it("Should get the fee estimate for chain 2 to chain 1", async () => {
+    const fee_estimate = await swapper._estimateFeeFrom2to1();
+    console.log("Fee Estimate 1 -> 2 :", fee_estimate);
+    expect(fee_estimate.length).to.greaterThan(10);
+  });
 
-    const call1 = await c1.getAddress();
-    const call2 = await c2.getAddress();
+  it("Should get native tWETH balance of contracts", async () => {
+    const balance = await swapper.getNativeWrappedTokenBalanceContract1();
+    console.log("tWETH : OPTIMISM :", balance);
+    const balance2 = await swapper.getNativeWrappedTokenBalanceContract2();
+    console.log("tWETH : BASE :", balance2);
 
-    expect(call1).to.not.equal("");
-    expect(call2).to.not.equal("");
+    expect(Number(balance)).to.greaterThanOrEqual(0);
+    expect(Number(balance2)).to.greaterThanOrEqual(0);
   });
 });
