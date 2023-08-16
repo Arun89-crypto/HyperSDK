@@ -1,11 +1,10 @@
 {
     "name": "@arun89-crypto/hypersdk",
     "version": "1.0.2",
-    "main": "index.js",
+    "main": "index.ts",
     "repository": "https://github.com/Arun89-crypto/HyperSDK",
     "author": "Arun89-crypto <arunjngra89@gmail.com>",
     "license": "MIT",
-    "type": "module",
     "scripts": {
         "build": "yarn tsc",
         "test:init": "yarn jest tests/Init.test.ts",
