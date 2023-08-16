@@ -1,14 +1,10 @@
-import { ethers } from "hardhat";
-import { TESTNET_CONFIG } from "../config";
+import { ethers } from 'hardhat';
+import { TESTNET_CONFIG } from '../config';
 
 const main = async () => {
   const signers = await ethers.getSigners();
 
-  const bal_erc20_weth = await ethers.getContractAt(
-    "ERC20",
-    TESTNET_CONFIG.BASE.TOKENS.tWETH,
-    signers[0]
-  );
+  const bal_erc20_weth = await ethers.getContractAt('ERC20', TESTNET_CONFIG.BASE.TOKENS.tWETH, signers[0]);
 
   const bal = await bal_erc20_weth.balanceOf(signers[0].address);
 

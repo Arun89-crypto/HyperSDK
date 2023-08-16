@@ -1,5 +1,5 @@
-import { ethers } from "hardhat";
-import { TESTNET_CONFIG } from "../config";
+import { ethers } from 'hardhat';
+import { TESTNET_CONFIG } from '../config';
 
 async function main() {
   const tweth = TESTNET_CONFIG.OPTIMISM.TOKENS.tWETH;
@@ -23,20 +23,13 @@ async function main() {
 
   // OPTIMISM
   const contract = await ethers.deployContract(
-    "TokenBridgeHyper",
-    [
-      endpoint_base,
-      swap_router,
-      swap_router_base,
-      tusdc_base,
-      tweth_base,
-      factory_base,
-    ],
-    signers[0]
+    'TokenBridgeHyper',
+    [endpoint_base, swap_router, swap_router_base, tusdc_base, tweth_base, factory_base],
+    signers[0],
   );
 
   await contract.waitForDeployment();
-  console.log("CONTRACT :", contract.getAddress());
+  console.log('CONTRACT :', contract.getAddress());
 }
 
 // We recommend this pattern to be able to use async/await everywhere

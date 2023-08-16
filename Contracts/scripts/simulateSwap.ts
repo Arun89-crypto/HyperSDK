@@ -1,6 +1,6 @@
-import { ethers } from "hardhat";
-import { solidityPacked } from "ethers";
-import { TESTNET_CONFIG } from "../config";
+import { ethers } from 'hardhat';
+import { solidityPacked } from 'ethers';
+import { TESTNET_CONFIG } from '../config';
 
 const main = async () => {
   const local_opt = TESTNET_CONFIG.DEPLOYED.OPTIMISM;
@@ -8,20 +8,16 @@ const main = async () => {
 
   const signers = await ethers.getSigners();
 
-  const contract = await ethers.getContractAt(
-    "TokenBridgeHyper",
-    local_opt,
-    signers[0]
-  );
+  const contract = await ethers.getContractAt('TokenBridgeHyper', local_opt, signers[0]);
 
-  const amount = ethers.parseUnits("0.0001", 18);
+  const amount = ethers.parseUnits('0.0001', 18);
   console.log(amount);
 
-  const amount2 = ethers.parseUnits("0.002", 18);
+  const amount2 = ethers.parseUnits('0.002', 18);
 
   const call = await contract.bridgeToken(amount, dest_chain_id_opt, {
     value: amount2,
-    gasPrice: "350000",
+    gasPrice: '350000',
   });
 
   console.log(call);

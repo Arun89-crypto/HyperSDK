@@ -1,6 +1,6 @@
-import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
-import dotenv from "dotenv";
+import { HardhatUserConfig } from 'hardhat/config';
+import '@nomicfoundation/hardhat-toolbox';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ const base_rpc = process.env.RPC_BASE as string;
 // console.log(base_rpc);
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.19",
+  solidity: '0.8.19',
   networks: {
     optimism: {
       url: opt_rpc,

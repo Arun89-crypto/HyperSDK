@@ -1,4 +1,4 @@
-import { MessageStatus } from "../enum/MessageStatus";
+import { MessageStatus } from '../enum/MessageStatus';
 
 export type Message = {
   srcUaAddress: string;

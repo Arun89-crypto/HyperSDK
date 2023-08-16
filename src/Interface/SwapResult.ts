@@ -1,4 +1,4 @@
-import { TransactionResult } from "../enum/TransactionResult";
+import { TransactionResult } from '../enum/TransactionResult';
 
 export interface SwapResult {
   result: TransactionResult;

@@ -1,21 +1,20 @@
-import { Contract, Provider, Signer, ethers } from "ethers";
-import { MainConfig } from "./Interface/MainConfig";
-import HyperTokenBridgeABI from "./contract_artifacts/contracts/TokenBridgeHyper.sol/TokenBridgeHyper.json";
-import ERC20ABI from "./contract_artifacts/contracts/tWETH.sol/TestWETH.json";
-import ENDPOINTABI from "./contract_artifacts/@layerzerolabs/solidity-examples/contracts/interfaces/ILayerZeroEndpoint.sol/ILayerZeroEndpoint.json";
-import { TESTNET_CONFIG } from "./config";
-import BigNumber from "bignumber.js";
-import { SwapResult } from "./Interface/SwapResult";
-import { TransactionResult } from "./enum/TransactionResult";
-import { getMessagesBySrcTxHash } from "@layerzerolabs/scan-client";
-import { Message } from "./Types/LayerZeroMessage";
-import { MessageStatus } from "./enum/MessageStatus";
+import { Contract, Provider, Signer, ethers } from 'ethers';
+import { MainConfig } from './Interface/MainConfig';
+import HyperTokenBridgeABI from './contract_artifacts/contracts/TokenBridgeHyper.sol/TokenBridgeHyper.json';
+import ERC20ABI from './contract_artifacts/contracts/tWETH.sol/TestWETH.json';
+import ENDPOINTABI from './contract_artifacts/@layerzerolabs/solidity-examples/contracts/interfaces/ILayerZeroEndpoint.sol/ILayerZeroEndpoint.json';
+import { TESTNET_CONFIG } from './config';
+import BigNumber from 'bignumber.js';
+import { SwapResult } from './Interface/SwapResult';
+import { TransactionResult } from './enum/TransactionResult';
+import { getMessagesBySrcTxHash } from '@layerzerolabs/scan-client';
+import { Message } from './Types/LayerZeroMessage';
+import { MessageStatus } from './enum/MessageStatus';
 
 const _TEST_PAYLOAD =
-  "0x00000000000000000000000000000000000000000000000000038d7ea4c68000000000000000000000000000858a9477f74baa24a7f062b74a7f2d064443df2e";
+  '0x00000000000000000000000000000000000000000000000000038d7ea4c68000000000000000000000000000858a9477f74baa24a7f062b74a7f2d064443df2e';
 
-const _TEST_ADAPTER_PARAM =
-  "0x00010000000000000000000000000000000000000000000000000000000000055730";
+const _TEST_ADAPTER_PARAM = '0x00010000000000000000000000000000000000000000000000000000000000055730';
 
 /**
  * @class HyperSwapper
@@ -41,35 +40,19 @@ class HyperSwapper {
    */
   constructor(config: MainConfig) {
     this.config = config;
-    this.signer1 = config.signer1;
-    this.signer2 = config.signer2;
+    this.signer1 = config.signer_1;
+    this.signer2 = config.signer_2;
 
     this.provider1 = new ethers.JsonRpcProvider(config.rpc_url_1);
     this.provider2 = new ethers.JsonRpcProvider(config.rpc_url_2);
 
-    this.contract1 = new ethers.Contract(
-      TESTNET_CONFIG.DEPLOYED[config.name_1],
-      HyperTokenBridgeABI.abi,
-      this.signer1
-    );
+    this.contract1 = new ethers.Contract(TESTNET_CONFIG.DEPLOYED[config.name_1], HyperTokenBridgeABI.abi, this.signer1);
 
-    this.contract2 = new ethers.Contract(
-      TESTNET_CONFIG.DEPLOYED[config.name_2],
-      HyperTokenBridgeABI.abi,
-      this.signer2
-    );
+    this.contract2 = new ethers.Contract(TESTNET_CONFIG.DEPLOYED[config.name_2], HyperTokenBridgeABI.abi, this.signer2);
 
-    this.endpoint1 = new ethers.Contract(
-      TESTNET_CONFIG[config.name_1].ENDPOINT,
-      ENDPOINTABI.abi,
-      this.signer1
-    );
+    this.endpoint1 = new ethers.Contract(TESTNET_CONFIG[config.name_1].ENDPOINT, ENDPOINTABI.abi, this.signer1);
 
-    this.endpoint2 = new ethers.Contract(
-      TESTNET_CONFIG[config.name_2].ENDPOINT,
-      ENDPOINTABI.abi,
-      this.signer2
-    );
+    this.endpoint2 = new ethers.Contract(TESTNET_CONFIG[config.name_2].ENDPOINT, ENDPOINTABI.abi, this.signer2);
   }
 
   /**
@@ -83,14 +66,10 @@ class HyperSwapper {
     const total_value = this._calcTotalValue(fee_estimate, price_wei);
 
     try {
-      const call = await this.contract1.bridgeToken(
-        total_value,
-        TESTNET_CONFIG[this.config.name_2].CHAIN_ID,
-        {
-          value: total_value,
-          gasPrice: "350000",
-        }
-      );
+      const call = await this.contract1.bridgeToken(total_value, TESTNET_CONFIG[this.config.name_2].CHAIN_ID, {
+        value: total_value,
+        gasPrice: '350000',
+      });
 
       return {
         result: TransactionResult.ACCEPTED,
@@ -116,14 +95,10 @@ class HyperSwapper {
     const total_value = this._calcTotalValue(fee_estimate, price_wei);
 
     try {
-      const call = await this.contract2.bridgeToken(
-        total_value,
-        TESTNET_CONFIG[this.config.name_1].CHAIN_ID,
-        {
-          value: total_value,
-          gasPrice: "350000",
-        }
-      );
+      const call = await this.contract2.bridgeToken(total_value, TESTNET_CONFIG[this.config.name_1].CHAIN_ID, {
+        value: total_value,
+        gasPrice: '350000',
+      });
 
       return {
         result: TransactionResult.ACCEPTED,
@@ -165,13 +140,7 @@ class HyperSwapper {
     const address = await this.contract1.getAddress();
 
     // Get estimated fees to be sent along the value
-    const fee = await contract.estimateFees(
-      destChainID,
-      address,
-      _TEST_PAYLOAD,
-      false,
-      _TEST_ADAPTER_PARAM
-    );
+    const fee = await contract.estimateFees(destChainID, address, _TEST_PAYLOAD, false, _TEST_ADAPTER_PARAM);
 
     return fee[0].toString();
   };
@@ -186,13 +155,7 @@ class HyperSwapper {
     const address = await this.contract1.getAddress();
 
     // Get estimated fees to be sent along the value
-    const fee = await contract.estimateFees(
-      destChainID,
-      address,
-      _TEST_PAYLOAD,
-      false,
-      _TEST_ADAPTER_PARAM
-    );
+    const fee = await contract.estimateFees(destChainID, address, _TEST_PAYLOAD, false, _TEST_ADAPTER_PARAM);
 
     return fee[0].toString();
   };
@@ -200,9 +163,7 @@ class HyperSwapper {
   // ==========================================================
   // Functions to get the transaction status from layerzero
   // ==========================================================
-  _getTransactionStatusLZ_1 = async (
-    txn_hash: string
-  ): Promise<MessageStatus> => {
+  _getTransactionStatusLZ_1 = async (txn_hash: string): Promise<MessageStatus> => {
     const chainId_source = TESTNET_CONFIG[this.config.name_1].CHAIN_ID;
     // wait for message to relay in layerzero
     // --------------------------------------
@@ -211,24 +172,18 @@ class HyperSwapper {
     console.log(call);
     return call.messages[0].status;
   };
-  _getFullTransactionStatusLZ_1 = async (
-    txn_hash: string
-  ): Promise<Message> => {
+  _getFullTransactionStatusLZ_1 = async (txn_hash: string): Promise<Message> => {
     const chainId_source = TESTNET_CONFIG[this.config.name_1].CHAIN_ID;
     const call = await getMessagesBySrcTxHash(Number(chainId_source), txn_hash);
     //@ts-ignore
     return call.messages[0];
   };
-  _getTransactionStatusLZ_2 = async (
-    txn_hash: string
-  ): Promise<MessageStatus> => {
+  _getTransactionStatusLZ_2 = async (txn_hash: string): Promise<MessageStatus> => {
     const chainId_source = TESTNET_CONFIG[this.config.name_2].CHAIN_ID;
     const call = await getMessagesBySrcTxHash(Number(chainId_source), txn_hash);
     return call.messages[0].status;
   };
-  _getFullTransactionStatusLZ_2 = async (
-    txn_hash: string
-  ): Promise<Message> => {
+  _getFullTransactionStatusLZ_2 = async (txn_hash: string): Promise<Message> => {
     const chainId_source = TESTNET_CONFIG[this.config.name_2].CHAIN_ID;
     const call = await getMessagesBySrcTxHash(Number(chainId_source), txn_hash);
     //@ts-ignore
@@ -256,11 +211,7 @@ class HyperSwapper {
   getNativeWrappedTokenBalanceContract1 = async () => {
     const address = await this.contract1.getAddress();
 
-    const contract = new ethers.Contract(
-      TESTNET_CONFIG[this.config.name_1].TOKENS.tWETH,
-      ERC20ABI.abi,
-      this.signer1
-    );
+    const contract = new ethers.Contract(TESTNET_CONFIG[this.config.name_1].TOKENS.tWETH, ERC20ABI.abi, this.signer1);
 
     const balance = await contract.balanceOf(address);
     return balance.toString();
@@ -269,11 +220,7 @@ class HyperSwapper {
   getNativeWrappedTokenBalanceContract2 = async () => {
     const address = await this.contract2.getAddress();
 
-    const contract = new ethers.Contract(
-      TESTNET_CONFIG[this.config.name_2].TOKENS.tWETH,
-      ERC20ABI.abi,
-      this.signer2
-    );
+    const contract = new ethers.Contract(TESTNET_CONFIG[this.config.name_2].TOKENS.tWETH, ERC20ABI.abi, this.signer2);
 
     const balance = await contract.balanceOf(address);
     return balance.toString();
@@ -282,4 +229,4 @@ class HyperSwapper {
   // ==========================================================
 }
 
-export default HyperSwapper;
+export { HyperSwapper };

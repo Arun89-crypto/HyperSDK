@@ -1,6 +1,6 @@
-import { ethers } from "hardhat";
-import PositionManagerABI from "../abis/PositionManager.json";
-import BigNumber from "bignumber.js";
+import { ethers } from 'hardhat';
+import PositionManagerABI from '../abis/PositionManager.json';
+import BigNumber from 'bignumber.js';
 
 const main = async () => {
   //   const provider = new ethers.JsonRpcProvider(
@@ -15,8 +15,8 @@ const main = async () => {
   //   const call = await contract.factory();
   //   console.log(call);
 
-  const amount = new BigNumber("1031985596180812680");
-  const _divideBy = new BigNumber("1000000000000000000");
+  const amount = new BigNumber('1031985596180812680');
+  const _divideBy = new BigNumber('1000000000000000000');
 
   const _asset_price = amount.div(_divideBy);
   console.log(_asset_price.toString());
