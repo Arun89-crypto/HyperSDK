@@ -32,7 +32,7 @@ const main = async () => {
   });
 
   // Swapping from Optimism -> Base
-  const swap = await swapper.Swap2to1('0.0001');
+  const swap = await swapper.Swap1to2('0.0001');
 
   console.log(swap);
   /*
