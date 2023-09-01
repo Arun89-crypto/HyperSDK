@@ -1,5 +1,9 @@
 # HyperSDK 🌀
 
+[![](https://img.shields.io/badge/made%20by-w3Ts0ckeT_eth-blue.svg?style=flat-square)](https://arunjangra.vercel.app)
+[![](https://img.shields.io/badge/project-HyperSDK-blue.svg?style=flat-square)]()
+[![](https://img.shields.io/badge/status-stable-brightgreen.svg?style=flat-square)]()
+
 Hyper Bridge Project: Seamlessly links Base & Optimism blockchains via Layer Zero Router. Swap native & wrapped tokens effortlessly. Empowers devs with user-friendly SDK for cross-chain interaction. Unlocking DeFi potential & blockchain adoption.
 
 **[NATIVE TO WRAPPED NATIVE SWAPPER]**
